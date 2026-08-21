@@ -1,0 +1,12 @@
+workflows:
+  android-workflow:
+    environment:
+      android_signing:
+        - Adel
+    scripts:
+      - script: flutter pub run flutter_launcher_icons
+      - script: flutter build appbundle --release
+      - script: flutter build apk --release
+    artifacts:
+      - build/**/outputs/**/*.aab
+      - build/**/outputs/**/*.apk
