@@ -1,7 +1,7 @@
 workflows:
   android-workflow:
     environment:
-      flutter: stable
+      flutter: 3.24.3
       android_signing:
         - Adel
     scripts:
