@@ -1,4 +1,4 @@
-package com.chunhthanhde.fruit_cutting_game
+package com.fruitslashmania.game
 
 import io.flutter.embedding.android.FlutterActivity
 
