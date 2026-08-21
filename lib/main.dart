@@ -13,7 +13,6 @@ import 'web_title_switcher_stub.dart' if (dart.library.html) 'web_title_switcher
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  Flame.device.setLandscape();
   Flame.device.fullScreen();
 
   runApp(
