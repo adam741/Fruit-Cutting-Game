@@ -1,6 +1,7 @@
 workflows:
   android-workflow:
     environment:
+      flutter: stable
       android_signing:
         - Adel
     scripts:
@@ -10,3 +11,4 @@ workflows:
     artifacts:
       - build/**/outputs/**/*.aab
       - build/**/outputs/**/*.apk
+      
