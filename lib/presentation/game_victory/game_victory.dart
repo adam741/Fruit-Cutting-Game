@@ -4,12 +4,7 @@
  * @ Message: You look very hardworking 👨‍💻. Keep focusing on your goals. 🌤️
  */
 
-import 'dart:ui';
 import 'dart:async';
-
-import 'package:fruit_cutting_game/common/helpers/image_downloader_stub.dart'
-    if (dart.library.html) 'package:fruit_cutting_game/common/helpers/image_downloader_web.dart'
-    if (dart.library.io) 'package:fruit_cutting_game/common/helpers/image_downloader_io.dart';
 
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
@@ -17,8 +12,6 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart' hide Game; // Hides the Game class to avoid naming conflicts.
 import 'package:flame/rendering.dart';
 import 'package:flame/text.dart';
-import 'package:flutter/foundation.dart';
-import 'package:fruit_cutting_game/common/helpers/app_save_action.dart';
 import 'package:fruit_cutting_game/common/widgets/button/rounded_button.dart';
 import 'package:fruit_cutting_game/core/configs/constants/app_router.dart';
 import 'package:fruit_cutting_game/core/configs/theme/app_colors.dart';
@@ -56,7 +49,6 @@ class GameVictoryPage extends Component with TapCallbacks, HasGameReference<Main
   late TextComponent _textComponent; // Text component to show the "VICTORY" message.
   late TextComponent _textTimeComponent;
   late TextComponent _textScoreComponent;
-  late TextComponent _textLeaderboardComponent;
   late TextComponent _textGameModeComponent;
 
   late RoundedButton _buttonNewGameComponent;
@@ -144,12 +136,6 @@ class GameVictoryPage extends Component with TapCallbacks, HasGameReference<Main
           anchor: Anchor.centerLeft, // Set the anchor point to the center.
           textRenderer: textTimePaint,
         ),
-        _textLeaderboardComponent = TextComponent(
-          text: "Click anywhere to save Rankings",
-          position: flameGame.canvasSize / 2,
-          anchor: Anchor.centerRight,
-          textRenderer: textPaint,
-        ),
         _textScoreComponent = TextComponent(
           text: 'Score: ',
           position: flameGame.canvasSize / 2,
@@ -174,7 +160,6 @@ class GameVictoryPage extends Component with TapCallbacks, HasGameReference<Main
     _textTimeComponent.position = Vector2(15, 20);
     _textScoreComponent.position = Vector2(game.size.x / 2, game.size.y / 2 + 25);
     _buttonNewGameComponent.position = Vector2(game.size.x / 2, game.size.y / 2 + 110);
-    _textLeaderboardComponent.position = Vector2(game.size.x - 15, game.size.y - 15);
     _textGameModeComponent.position = Vector2(15, game.size.y - 15);
 
     _textScoreComponent.text = 'Score: ${game.getScore()}';
@@ -200,36 +185,9 @@ class GameVictoryPage extends Component with TapCallbacks, HasGameReference<Main
 
   /// Handle tap up events; navigate back to the previous screen when tapped.
   @override
-  Future<void> onTapUp(TapUpEvent event) async {
-    await captureAndSaveImage();
-    final GitHubService gitHubService = GitHubService(
-      time: _textTimeComponent.text,
-      score: game.getScore().toString(),
-      mode: game.mode.toString(),
-      win: true,
-    );
-    gitHubService.createIssue();
-  }
-
-  Future<void> captureAndSaveImage() async {
-    try {
-      final PictureRecorder recorder = PictureRecorder();
-      final Rect rect = Rect.fromLTWH(0.0, 0.0, game.size.x, game.size.y);
-      final Canvas c = Canvas(recorder, rect);
-
-      game.render(c);
-
-      final Image image =
-          await recorder.endRecording().toImage(game.size.x.toInt(), game.size.y.toInt());
-      ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
-
-      downloadImageBytes(pngBytes, "screenshot.png");
-      // ignore: empty_catches
-    } catch (e) {
-      if (kDebugMode) {
-        print(e.toString());
-      }
-    }
+  void onTapUp(TapUpEvent event) {
+    game.router
+      ..pop() // Go back to the previous route.
+      ..pushNamed(AppRouter.homePage, replace: true); // Push the home page route.
   }
 }
