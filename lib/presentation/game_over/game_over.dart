@@ -5,11 +5,6 @@
  */
 
 import 'dart:async';
-import 'dart:ui';
-
-import 'package:fruit_cutting_game/common/helpers/image_downloader_stub.dart'
-    if (dart.library.html) 'package:fruit_cutting_game/common/helpers/image_downloader_web.dart'
-    if (dart.library.io) 'package:fruit_cutting_game/common/helpers/image_downloader_io.dart';
 
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
@@ -17,9 +12,6 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flame/rendering.dart';
 import 'package:flame/text.dart';
-import 'package:flutter/foundation.dart';
-import 'package:fruit_cutting_game/common/helpers/app_save_action.dart';
-import 'package:fruit_cutting_game/common/widgets/button/rounded_button.dart';
 import 'package:fruit_cutting_game/core/configs/constants/app_router.dart';
 import 'package:fruit_cutting_game/core/configs/theme/app_colors.dart';
 import 'package:fruit_cutting_game/main_router_game.dart';
@@ -67,8 +59,6 @@ class GameOverPage extends Component with TapCallbacks, HasGameReference<MainRou
   late TextComponent _textNewGameComponent;
   late TextComponent _textGameModeComponent;
 
-  late RoundedButton _buttonLeaderboard;
-
   final String timezone = 'UTC+7';
 
   /// Load the components for the Game Over page.
@@ -109,27 +99,6 @@ class GameOverPage extends Component with TapCallbacks, HasGameReference<MainRou
         letterSpacing: 2.0,
       ),
     );
-
-    _buttonLeaderboard = RoundedButton(
-      sizeX: 250,
-      bgColor: AppColors.githubColor,
-      borderColor: AppColors.blue,
-      text: "Leaderboard",
-      anchor: Anchor.center,
-      onPressed: () async {
-        await captureAndSaveImage();
-        // Save your score
-        final GitHubService gitHubService = GitHubService(
-          time: _textTimeComponent.text,
-          score: game.getScore().toString(),
-          mode: game.mode.toString(),
-          win: false,
-        );
-        gitHubService.createIssue();
-      },
-    );
-
-    add(_buttonLeaderboard);
 
     final flameGame = findGame()!; // Find the current game instance.
 
@@ -191,8 +160,6 @@ class GameOverPage extends Component with TapCallbacks, HasGameReference<MainRou
     _textScoreComponent.position = Vector2(game.size.x / 2, game.size.y / 2 + 25);
     _textScoreComponent.text = 'Score: ${game.getScore()}';
 
-    _buttonLeaderboard.position = Vector2(game.size.x / 2, game.size.y / 2 + 110);
-
     _textNewGameComponent.position = game.isDesktop
         ? Vector2(game.size.x - 15, game.size.y - 15)
         : Vector2(game.size.x / 2, game.size.y - 15);
@@ -224,27 +191,5 @@ class GameOverPage extends Component with TapCallbacks, HasGameReference<MainRou
     game.router
       ..pop() // Go back to the previous route.
       ..pushNamed(AppRouter.homePage, replace: true); // Push the home page route.
-  }
-
-  Future<void> captureAndSaveImage() async {
-    try {
-      final PictureRecorder recorder = PictureRecorder();
-      final Rect rect = Rect.fromLTWH(0.0, 0.0, game.size.x, game.size.y);
-      final Canvas c = Canvas(recorder, rect);
-
-      game.render(c);
-
-      final Image image =
-          await recorder.endRecording().toImage(game.size.x.toInt(), game.size.y.toInt());
-      ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
-
-      downloadImageBytes(pngBytes, "screenshot.png");
-      // ignore: empty_catches
-    } catch (e) {
-      if (kDebugMode) {
-        print(e.toString());
-      }
-    }
   }
 }
