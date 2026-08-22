@@ -3,7 +3,7 @@ workflows:
     environment:
       flutter: 3.24.3
       android_signing:
-        - Adel
+        - Aser
     scripts:
       - script: flutter pub get
       - script: flutter pub run flutter_launcher_icons
