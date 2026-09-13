@@ -1,4 +1,4 @@
-package com.fruitslashmania.game
+package com.game.fruitslashingforce
 
 import io.flutter.embedding.android.FlutterActivity
 
