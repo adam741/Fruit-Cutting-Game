@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id "com.android.application"
     id "kotlin-android"
@@ -5,8 +8,7 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
-import java.io.FileInputStream
-import java.util.Properties
+
 
 def keystorePropertiesFile = rootProject.file("key.properties")
 def keystoreProperties = new Properties()
