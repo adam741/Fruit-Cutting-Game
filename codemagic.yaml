@@ -1,7 +1,7 @@
 workflows:
   android-workflow:
     environment:
-      flutter: 3.24.3
+      flutter: 3.35.2
       android_signing:
         - Aser
     scripts:
