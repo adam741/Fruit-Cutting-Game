@@ -3,7 +3,7 @@ workflows:
     environment:
       flutter: 3.35.2
       android_signing:
-        - Aser
+        - ss1
     scripts:
       - name: Set up key.properties from Codemagic keystore
         script: |
