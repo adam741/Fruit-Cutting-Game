@@ -1,4 +1,4 @@
-package com.game.fruitslicerlegacy
+package com.game.fruitbladechaos
 
 import io.flutter.embedding.android.FlutterActivity
 
